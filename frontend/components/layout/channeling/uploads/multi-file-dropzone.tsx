@@ -14,7 +14,7 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import Image from "next/image";
 
 const variants = {
-  base: "relative rounded-md p-4 w-full flex justify-center items-center flex-col cursor-pointer border border-dashed border-blue-600 dark:border-gray-300 transition-colors duration-200 ease-in-out bg-blue-600/5",
+  base: "relative rounded-md p-4 w-full flex justify-center items-center flex-col cursor-pointer border border-dashed border-blue-600 dark:border-gray-300 transition-colors duration-200 ease-in-out bg-blue-100/5",
   active: "border-2",
   disabled:
     "bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30 dark:bg-gray-700 dark:border-gray-600",
@@ -136,7 +136,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         <div className="flex w-full flex-col gap-2">
-          <div className="w-1/2 m-auto">
+          <div className="w-[80%] md:w-3/4 m-auto">
             {/* Main File Input */}
             <div
               {...getRootProps({
@@ -152,7 +152,6 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                     autoplay
                   />
                 </div>
-
                 <div className="flex flex-col items-center gap-2">
                   Drop your file(s) here, or
                   <br />
@@ -240,7 +239,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
               {/* Progress Bar */}
               {typeof progress === "number" && (
                 <div className="relative h-0">
-                  <div className="absolute top-1 h-1 w-full overflow-clip rounded-full bg-green-200 dark:bg-gray-700">
+                  <div className="absolute top-1 h-1 w-full overflow-clip rounded-full bg-gray-200 dark:bg-gray-700">
                     <div
                       className="h-full bg-green-600 transition-all duration-300 ease-in-out dark:bg-white"
                       style={{
