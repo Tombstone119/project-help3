@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { IoMdCloseCircle } from "react-icons/io";
+import { ImImages } from "react-icons/im";
 
 export default function UploadLabReports() {
   const [fileStates, setFileStates] = useState<FileState[]>([]);
@@ -147,10 +148,10 @@ export default function UploadLabReports() {
               );
             }}
           />
-          <h1 className="text-2xl font-bold text-teal-900 text-center underline underline-offset-8 mt-2 mb-2">
-            Recently Uploaded Lab Reports
+          <h1 className="text-2xl font-bold text-teal-900 text-center underline underline-offset-8 mt-2 mb-2 flex items-center gap-2">
+            Recently Uploaded Lab Reports <ImImages />
           </h1>
-          <div className="flex flex-wrap gap-2 justify-center">
+          <div className="flex flex-wrap gap-2 justify-center mb-2">
             {reportList.map((report, index) => (
               <div
                 key={`new-reports-${index + 1}`}
@@ -178,8 +179,8 @@ export default function UploadLabReports() {
         </div>
       </div>
       {selectedImage.trim().length > 0 && (
-        <div className="fixed z-50 inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="relative w-[60%] h-[80%] max-w-[800px] max-h-[800px] rounded-lg flex items-center justify-center border-2 border-dashed">
+        <div className="fixed z-50 inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm">
+          <div className="relative w-[60%] h-[80%] max-w-[800px] max-h-[800px] rounded-lg flex items-center justify-center border-black border-2 border-dashed">
             <button
               className="absolute top-2 right-2 text-black"
               onClick={() => setSelectedImage("")}
