@@ -3,18 +3,18 @@
 import { formatFileSize } from "@edgestore/react/utils";
 import {
   CheckCircleIcon,
-  FileIcon,
   LucideFileWarning,
   Trash2Icon,
-  UploadCloudIcon,
   XIcon,
 } from "lucide-react";
 import * as React from "react";
 import { useDropzone, type DropzoneOptions } from "react-dropzone";
 import { twMerge } from "tailwind-merge";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import Image from "next/image";
 
 const variants = {
-  base: "relative rounded-md p-4 w-full flex justify-center items-center flex-col cursor-pointer border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out",
+  base: "relative rounded-md p-4 w-full flex justify-center items-center flex-col cursor-pointer border border-dashed border-blue-600 dark:border-gray-300 transition-colors duration-200 ease-in-out bg-blue-600/5",
   active: "border-2",
   disabled:
     "bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30 dark:bg-gray-700 dark:border-gray-600",
@@ -136,7 +136,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         <div className="flex w-full flex-col gap-2">
-          <div className="w-full">
+          <div className="w-1/2 m-auto">
             {/* Main File Input */}
             <div
               {...getRootProps({
@@ -144,11 +144,31 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
               })}
             >
               <input ref={ref} {...getInputProps()} />
-              <div className="flex flex-col items-center justify-center text-xs text-gray-400">
-                <UploadCloudIcon className="mb-1 h-7 w-7" />
-                <div className="text-gray-400">
-                  drag & drop or click to upload
+              <div className="flex flex-col items-center justify-center text-blue-600 min-h-[300px]">
+                <div className="md:h-auto lg:h-[150px] md:w-auto lg:w-auto mb-2">
+                  <DotLottieReact
+                    src="/assets/images/download-icon.lottie"
+                    loop
+                    autoplay
+                  />
                 </div>
+
+                <div className="flex flex-col items-center gap-2">
+                  Drop your file(s) here, or
+                  <br />
+                  <span className="font-semibold bg-teal-600 text-white rounded-md px-2 py-1">
+                    Browse
+                  </span>
+                </div>
+              </div>
+              <div className="absolute bottom-3 right-0 translate-x-[61px] ">
+                <Image
+                  width={100}
+                  height={10}
+                  src="/assets/images/bear.png"
+                  alt="drag-drop"
+                  className="shrink-0"
+                />
               </div>
             </div>
 
@@ -162,10 +182,16 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
           {value?.map(({ file, abortController, progress }, i) => (
             <div
               key={i}
-              className="flex h-16 w-full flex-col justify-center rounded border border-gray-300 px-4 py-2"
+              className="flex h-16 w-1/2 m-auto flex-col justify-center rounded border-2 border-dashed border-black/30  px-4 py-2"
             >
               <div className="flex items-center gap-2 text-gray-500 dark:text-white">
-                <FileIcon size="30" className="shrink-0" />
+                <Image
+                  width={30}
+                  height={30}
+                  src="/assets/images/file.png"
+                  alt="file"
+                  className="shrink-0"
+                />
                 <div className="min-w-0 text-sm">
                   <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
                     {file.name}
@@ -207,16 +233,16 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                       <div>{Math.round(progress)}%</div>
                     </div>
                   ) : (
-                    <CheckCircleIcon className="shrink-0 text-green-600 dark:text-gray-400" />
+                    <CheckCircleIcon className="shrink-0 text-green-700 dark:text-gray-400" />
                   )}
                 </div>
               </div>
               {/* Progress Bar */}
               {typeof progress === "number" && (
                 <div className="relative h-0">
-                  <div className="absolute top-1 h-1 w-full overflow-clip rounded-full bg-gray-200 dark:bg-gray-700">
+                  <div className="absolute top-1 h-1 w-full overflow-clip rounded-full bg-green-200 dark:bg-gray-700">
                     <div
-                      className="h-full bg-gray-400 transition-all duration-300 ease-in-out dark:bg-white"
+                      className="h-full bg-green-600 transition-all duration-300 ease-in-out dark:bg-white"
                       style={{
                         width: progress ? `${progress}%` : "0%",
                       }}

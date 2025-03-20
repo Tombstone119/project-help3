@@ -24,3 +24,8 @@ export interface IUser {
 export type UserDocument = Document<unknown, {}, IUser> &
   IUser &
   Required<{ _id: unknown }> & { __v: number };
+
+export interface IReport {
+  patientId: string;
+  image: string[];
+}
