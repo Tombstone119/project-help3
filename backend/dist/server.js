@@ -33956,21 +33956,45 @@ var deleteItem = async (req, res) => {
     res.status(500).json({ error: "Failed to delete item." });
   }
 };
+var updateItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name: name2, quantity, unit, perItemPrice, expiryDate } = req.body;
+    if (!name2 || !quantity || !unit || !perItemPrice || !expiryDate) {
+      res.status(400).json({ error: "All fields are required." });
+      return;
+    }
+    const updatedItem = await InventoryModel_default.findByIdAndUpdate(
+      id,
+      { name: name2, quantity, unit, perItemPrice, expiryDate },
+      { new: true }
+      // Return the updated document
+    );
+    if (!updatedItem) {
+      res.status(404).json({ error: "Item not found." });
+      return;
+    }
+    res.status(200).json(updatedItem);
+  } catch (error) {
+    console.error("Error updating item:", error);
+    res.status(500).json({ error: "Failed to update item." });
+  }
+};
 
 // src/models/treatmentModel.ts
 import mongoose3 from "mongoose";
 var treatmentSchema = new mongoose3.Schema({
   patientID: { type: String, required: true },
   patientName: { type: String, required: true },
-  age: { type: Number, required: true },
+  age: { type: String, required: true },
   gender: { type: String, required: true },
   diagnosis: { type: String, required: true },
-  treatment: { type: String, required: true },
+  treatment: { type: String, required: false },
   medicines: { type: String, required: true },
-  yogaExercises: { type: String, required: true },
+  yogaExercises: { type: String, required: false },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
-  notes: { type: String, required: true },
+  notes: { type: String, required: false },
   status: { type: String, required: true }
 });
 var Treatment = mongoose3.model("Treatment", treatmentSchema);
@@ -33981,9 +34005,116 @@ var addTreatment = async (req, res) => {
   try {
     const newTreatment = new treatmentModel_default(req.body);
     await newTreatment.save();
-    res.status(200).json({ message: "Treatment added successfully", data: newTreatment });
+    res.status(200).json({
+      message: "Treatment added successfully",
+      data: newTreatment
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error adding treatment", error: error.message });
+    res.status(500).json({
+      message: "Error adding treatment",
+      error: error.message
+    });
+  }
+};
+var getAllPatients = async (req, res) => {
+  try {
+    const treatments = await treatmentModel_default.find();
+    res.status(200).json({
+      message: "Patients fetched successfully",
+      data: treatments
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching patients",
+      error: error.message
+    });
+  }
+};
+var getPatientTreatment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const treatment = await treatmentModel_default.findById(id);
+    if (!treatment) {
+      res.status(404).json({
+        message: "Patient treatment not found"
+      });
+      return;
+    }
+    res.status(200).json({
+      message: "Patient treatment fetched successfully",
+      data: treatment
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching patient treatment",
+      error: error.message
+    });
+  }
+};
+var updateTreatment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      patientName,
+      age,
+      gender,
+      diagnosis,
+      treatment,
+      medicines,
+      yogaExercises,
+      startDate,
+      endDate,
+      notes,
+      status
+    } = req.body;
+    const existingTreatment = await treatmentModel_default.findById(id);
+    if (!existingTreatment) {
+      res.status(404).json({
+        message: "Treatment not found"
+      });
+      return;
+    }
+    existingTreatment.patientName = patientName || existingTreatment.patientName;
+    existingTreatment.age = age || existingTreatment.age;
+    existingTreatment.gender = gender || existingTreatment.gender;
+    existingTreatment.diagnosis = diagnosis || existingTreatment.diagnosis;
+    existingTreatment.treatment = treatment || existingTreatment.treatment;
+    existingTreatment.medicines = medicines || existingTreatment.medicines;
+    existingTreatment.yogaExercises = yogaExercises || existingTreatment.yogaExercises;
+    existingTreatment.startDate = startDate || existingTreatment.startDate;
+    existingTreatment.endDate = endDate || existingTreatment.endDate;
+    existingTreatment.notes = notes || existingTreatment.notes;
+    existingTreatment.status = status || existingTreatment.status;
+    await existingTreatment.save();
+    res.status(200).json({
+      message: "Treatment updated successfully",
+      data: existingTreatment
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error updating treatment",
+      error: error.message
+    });
+  }
+};
+var deleteTreatment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const treatment = await treatmentModel_default.findByIdAndDelete(id);
+    if (!treatment) {
+      res.status(404).json({
+        message: "Treatment not found or already deleted"
+      });
+      return;
+    }
+    res.status(200).json({
+      message: "Treatment deleted successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error deleting treatment",
+      error: error.message
+    });
   }
 };
 
@@ -34244,20 +34375,21 @@ var handleError = (res, error) => {
 
 // src/controllers/appointmentController.ts
 var createPatientAppointment = async (req, res) => {
+  const data = req.body;
   try {
     const newAppointment = await appointmentService_default.createAppointmentByPatient({
-      patientId: "5678",
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      dateOfBirth: req.body.dateOfBirth,
-      gender: req.body.gender,
-      maritalState: req.body.maritalState,
-      phoneNumber: req.body.phoneNumber,
-      alternativePhoneNumber: req.body.alternativePhoneNumber,
-      email: req.body.email,
-      address: req.body.address,
-      appointmentDate: req.body.appointmentDate,
-      paymentStatus: req.body.paymentStatus
+      patientId: data.patientId,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      dateOfBirth: data.dateOfBirth,
+      gender: data.gender,
+      maritalState: data.maritalState,
+      phoneNumber: data.phoneNumber,
+      alternativePhoneNumber: data.alternativePhoneNumber,
+      email: data.email,
+      address: data.address,
+      appointmentDate: data.appointmentDate,
+      paymentStatus: data.paymentStatus
     });
     res.status(statusCodes_default.CREATED).json({
       success: true,
@@ -34361,7 +34493,7 @@ var rescheduleAppointmentByRefNo2 = async (req, res) => {
     const updatedAppointment = await appointmentService_default.rescheduleAppointmentByRefNo({
       referenceNumber,
       appointment: {
-        patientId: "5678",
+        patientId: req.body.patientId,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         dateOfBirth: req.body.dateOfBirth,
@@ -34475,7 +34607,7 @@ var userSchema = new Schema2(
     role: {
       type: String,
       enum: ["doctor", "admin", "supplier", "user"],
-      default: "user"
+      default: "admin"
     }
   },
   {
@@ -39338,7 +39470,7 @@ var signInUser = async (req, res) => {
         success: true,
         message: "Login successful",
         user: {
-          id: user._id,
+          id: user._id.toString(),
           username: user.username,
           email: user.email,
           role: user.role,
@@ -39363,10 +39495,16 @@ router2.post("/product/add", createProduct);
 router2.get("/products", getProducts);
 router2.delete("/products/:id", deleteProduct);
 router2.put("/products/:id", updateProduct);
+router2.post("/treatments", addTreatment);
+router2.get("/treatments", getAllPatients);
+router2.get("/treatments/:id", getPatientTreatment);
+router2.put("/treatments/:id", updateTreatment);
+router2.delete("/treatments/:id", deleteTreatment);
 router2.get("/inventory", getInventory);
 router2.post("/inventory", addItem);
 router2.put("/inventory/:id", updateQuantity);
 router2.delete("/inventory/:id", deleteItem);
+router2.put("/inventory-item/:id", updateItem);
 router2.post("/treatments", addTreatment);
 router2.use("/appointments", appointmentRoute_default);
 router2.get("/user/check-username-unique/:username", checkUniqueUserName);
