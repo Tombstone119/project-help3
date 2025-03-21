@@ -11,6 +11,7 @@ import {
   rescheduleAppointmentByRefNo,
   deleteAppointmentByRefNo,
   deleteAllAppointmentsByDate,
+  rescheduleAppointmentById,
 } from "../controllers/appointmentController.ts";
 
 const router = Router();
@@ -41,6 +42,8 @@ router
   .get(findByRefNo)
   .delete(deleteAppointmentByRefNo)
   .put(rescheduleAppointmentByRefNo);
+
+router.route("/reschedule/:id").post(rescheduleAppointmentById);
 
 router.route("/patientIdByRefNo/:refNo").get(getPatientIdByRefNo);
 

@@ -62,7 +62,7 @@ export default function ChannelAppointmentForm() {
         );
         if (response.success) {
           toast.success(
-            `Appointment successfully created ${response.appointment?.referenceNumber}`
+            `Appointment successfully created!. Ref:${response.appointment?.referenceNumber}`
           );
         }
         if (!response.success) {

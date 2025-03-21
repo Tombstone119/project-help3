@@ -2,7 +2,7 @@
 
 import { DataTable } from "@/components/layout/channeling/tables/my-appointments";
 import { IAppointment } from "@/types/index";
-import { columns } from "@/components/layout/channeling/tables/columns";
+import { getColumns } from "@/components/layout/channeling/tables/columns";
 import { useEffect, useState } from "react";
 import { Stethoscope } from "lucide-react";
 import { AppointmentResponse } from "@/types/users";
@@ -14,21 +14,26 @@ export default function ViewAppointment() {
   const { data: session } = useSession();
   const user = session?.user;
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await apiService.get<AppointmentResponse>(
-        `/appointments/patient/${user?.id}`
-      );
-      if (response.success) {
-        setData(response?.appointments || []);
-      }
-    };
+  const refreshPage = () => {
+    getData();
+  };
 
+  const getData = async () => {
+    const response = await apiService.get<AppointmentResponse>(
+      `/appointments/patient/${user?.id}`
+    );
+    if (response.success) {
+      setData(response?.appointments || []);
+    }
+  };
+
+  const columns = getColumns(refreshPage);
+
+  useEffect(() => {
     if (user?.id) {
       getData();
     }
-
-    // setData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
   return (
