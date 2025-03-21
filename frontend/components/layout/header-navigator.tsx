@@ -9,6 +9,7 @@ import logoLight from "@/images/logo-white.svg";
 import { signOut, useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { ModeToggle } from "@/shadcn/them-switch-list";
+import { isAuthorized } from "@/helpers/util/user-levels";
 
 const LinkComponent = ({
   href,
@@ -80,7 +81,7 @@ export default function HeaderNavigator() {
           text="Home"
           isSelected={pathname.includes("/home")}
         />
-        {!!user && (
+        {isAuthorized(user, "forth") && (
           <LinkComponent
             href="/channeling"
             text="Appointment"

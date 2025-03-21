@@ -181,9 +181,6 @@ export const rescheduleAppointmentByRefNo = async (
   res: Response
 ): Promise<void> => {
   try {
-    //! Take patient Id from the session
-    //const patientId = req.user.id;
-
     const { referenceNumber } = req.params;
 
     const updatedAppointment =
