@@ -18,6 +18,17 @@ export default function ViewAppointment() {
     getData();
   };
 
+  const getPaymentDone = async (data: IAppointment) => {
+    console.log("data: =-->", data);
+
+    // const response = await apiService.get<AppointmentResponse>(
+    //   `/appointments/payment/${data.referenceNumber}`
+    // );
+    // if (response.success) {
+    //   setData(response?.appointments || []);
+    // }
+  };
+
   const getData = async () => {
     const response = await apiService.get<AppointmentResponse>(
       `/appointments/patient/${user?.id}`
@@ -27,7 +38,7 @@ export default function ViewAppointment() {
     }
   };
 
-  const columns = getColumns(refreshPage);
+  const columns = getColumns(refreshPage, getPaymentDone);
 
   useEffect(() => {
     if (user?.id) {

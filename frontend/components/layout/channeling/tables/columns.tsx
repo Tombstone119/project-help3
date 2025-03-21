@@ -13,7 +13,8 @@ import CopyToClipboard from "./copy-to-clipboard";
 import { EditPass } from "./edit-pass";
 
 export const getColumns = (
-  refreshPage: () => void
+  refreshPage: () => void,
+  getPaymentDone: (data: IAppointment) => void
 ): ColumnDef<IAppointment>[] => {
   const columns: ColumnDef<IAppointment>[] = [
     {
@@ -39,6 +40,7 @@ export const getColumns = (
               </DialogContent>
             </Dialog>
             <DeleteDialog rowData={rowData} refreshFn={refreshPage} />
+            <Button onClick={() => getPaymentDone(rowData)}>Pay Now</Button>
           </div>
         );
       },
